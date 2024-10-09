@@ -1,7 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
 
 // This function can be marked `async` if using `await` inside
-type Countries = "FR" | "LT" | null;
+type Countries = "FR" | "LT";
 
 export function middleware(request: NextRequest) {
   const country = (request.geo && request.geo.country) as Countries;
@@ -16,7 +16,7 @@ export function middleware(request: NextRequest) {
 
   console.log(
     "Should load the following route -> ",
-    mappedRoutes[country || "default"]
+    mappedRoutes[country] || mappedRoutes.default
   );
 
   if (
