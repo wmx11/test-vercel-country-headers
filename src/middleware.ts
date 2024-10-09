@@ -4,7 +4,7 @@ import { NextResponse, NextRequest } from "next/server";
 type Countries = "fr" | "lt" | null;
 
 export function middleware(request: NextRequest) {
-  const countryHeader = request.headers.get("x-vercel-ip-country") as Countries;
+  const country = (request.geo && request.geo.country) as Countries;
 
   const mappedRoutes = {
     fr: "/about/france",
@@ -12,13 +12,20 @@ export function middleware(request: NextRequest) {
     default: "/about",
   };
 
+  console.log("Request coming from -> ", country);
+
+  console.log(
+    "Should load the following route -> ",
+    mappedRoutes[country || "default"]
+  );
+
   if (
-    countryHeader &&
-    mappedRoutes[countryHeader] &&
-    request.url.includes("about")
+    country &&
+    mappedRoutes[country] &&
+    request.nextUrl.pathname !== mappedRoutes[country]
   ) {
     return NextResponse.redirect(
-      new URL(mappedRoutes[countryHeader] || mappedRoutes.default, request.url)
+      new URL(mappedRoutes[country] || mappedRoutes.default, request.url)
     );
   }
 }
