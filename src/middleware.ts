@@ -4,6 +4,10 @@ import { NextResponse, NextRequest } from "next/server";
 type Countries = "FR" | "LT";
 
 export function middleware(request: NextRequest) {
+  const region = request.headers.get("x-vercel-ip-country-region");
+
+  console.log("Request coming from region -> ", region);
+
   const country = (request.geo && request.geo.country) as Countries;
 
   const mappedRoutes = {
